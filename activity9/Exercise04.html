@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head> </head>
+
+<body>
+    <div id="maincontainer">
+    </div>
+    <script>
+        const id = "maincontainer";
+        let infoToggle = false;
+        let worker;
+        let dateActive = false;
+        let countColor = 0;
+        let dateColor = ["purple", "blue", "navy", "green", "yellow", "orange"];
+        let allList = [
+            {
+                name: "Fireworks",
+                src: "https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2015/10/28/1446047988227/Fireworks-of-various-colo-009.jpg?width=465&dpr=1&s=none",
+            },
+            {
+                name: "Crest",
+                src: "http://t2.gstatic.com/images?q=tbn:ANd9GcTjB7Y4VYw5Rw7zjRXVPzGylGKeQ-NLlvLcIEP6bDuNBePJefrJ",
+            },
+            {
+                name: "Action",
+                src: "https://t4.ftcdn.net/jpg/00/72/76/37/360_F_72763724_by9TH6BAQWZAYjC7llpKKmhHweEak7VC.jpg",
+            },
+            {
+                name: "Buffalo",
+                src: "https://www.wintershoeksafaris.com/wp-content/uploads/2019/04/Cape-Buffalo-Gallery-Image-2.jpg",
+            },
+        ];
+
+        header = () => {
+            const h2 = document.createElement("h2");
+            const header = document.createTextNode("Exercise 04: Javascript&DOM");
+            h2.appendChild(header);
+            document.getElementById(id).appendChild(h2);
+        };
+
+        dateButton = () => {
+            const btn = document.createElement("button");
+            const text = document.createTextNode(
+                "Click me to display Date and Time."
+            );
+            btn.id = "date";
+            btn.style.cursor = "pointer";
+            btn.onclick = () => {
+                webWorker();
+            };
+            btn.appendChild(text);
+            document.getElementById(id).appendChild(btn);
+        };
+
+        webWorker = () => {
+            dateActive = !dateActive
+            const button = document.getElementById("date");
+            if (dateActive) {
+                worker = new Worker("web-worker.js");
+                worker.onmessage = (event) => {
+                    button.style.position = "fixed";
+                    button.style.top = 0;
+                    button.style.right = 0;
+                    button.style.backgroundColor = dateColor[countColor++];
+                    button.style.color = "white";
+                    button.style.border = "solid black 2px"
+                    button.innerText = event.data;
+                    if (countColor > 5) {
+                        countColor = 0;
+                    }
+                };
+            } else {
+                worker.terminate();
+                button.style.position = null;
+            }
+        };
+
+        personalInfo = () => {
+            const allList = [
+                "Khris Bharmmano, ID: 65010107",
+                "Subject: WEB APPLICATION DEVELOPMENT",
+                "Semester: 2",
+            ];
+            let liList = [];
+            let css =
+                "#infoTopic{color:pink; width:fit-content; text-decoration: underline;} #infoTopic:hover{color:blue; background-color:yellow }";
+            let style = document.createElement("style");
+            const div = document.createElement("div");
+            div.style.paddingTop = "1rem";
+            const p = document.createElement("p");
+            p.id = "infoTopic";
+            p.style.cursor = "pointer";
+            if (style.styleSheet) {
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            p.appendChild(style);
+            const topic = document.createTextNode("Personal Info");
+            const ul = document.createElement("ul");
+            ul.style.display = "none";
+            p.onclick = () => {
+                infoToggle = !infoToggle;
+                if (infoToggle) {
+                    ul.style.display = "block";
+                } else {
+                    ul.style.display = "none";
+                }
+            };
+            allList.map((i) => {
+                const li = document.createElement("li");
+                const span = document.createElement("span");
+                const text = document.createTextNode(i);
+                span.appendChild(text);
+                li.appendChild(span);
+                liList.push(li);
+            });
+            liList.map((li) => {
+                ul.appendChild(li);
+            });
+            p.appendChild(topic);
+            div.appendChild(p);
+            div.appendChild(ul);
+            document.getElementById(id).appendChild(div);
+        };
+
+        snapshots = () => {
+            let liList = [];
+            const div = document.createElement("div");
+            const h1 = document.createElement("h1");
+            const topic = document.createTextNode("Snapshots");
+            const ul = document.createElement("ul");
+            const img = document.createElement("img");
+            img.src = "https://thaipublica.org/wp-content/uploads/2016/04/KBTG2.jpg"
+            img.style.width = "500px";
+            allList.map((i) => {
+                const li = document.createElement("li");
+                const span = document.createElement("span");
+                span.style.cursor = "pointer";
+                span.style.textDecoration = "underline";
+                span.style.color = "blue";
+                li.onclick = () => {
+                    img.src = i.src;
+                };
+                const text = document.createTextNode(i.name);
+                span.appendChild(text);
+                li.appendChild(span);
+                liList.push(li);
+            });
+            liList.map((li) => {
+                ul.appendChild(li);
+            });
+            h1.appendChild(topic);
+            div.appendChild(h1);
+            div.appendChild(ul);
+            div.appendChild(img);
+            document.getElementById(id).appendChild(div);
+        };
+
+        header();
+        dateButton();
+        personalInfo();
+        snapshots();
+    </script>
+</body>
+
+</html>
